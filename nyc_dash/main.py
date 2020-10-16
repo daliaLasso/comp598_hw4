@@ -28,9 +28,10 @@ x = months
 y = zip_list_from_df(df_zip, '10000')
 p = figure(x_range=(0,10), y_range=(0,400))
 r2 = p.line(x, y)
+r3 = p.line(x, y)
 ds = r2.data_source
     
-def handle_zip(attr, old, new):
+def handle_zip1(attr, old, new):
 	ls = zip_list_from_df(df_zip, new)
 	new_data = {}
 	new_data['x'] = months
@@ -38,8 +39,25 @@ def handle_zip(attr, old, new):
 	ds.data = new_data
 	print(ls)
 
-menu = Select(options=list(df_zip['zipcode'].unique()),value='10000', title = 'Zipcode 1')
-menu.on_change('value', handle_zip)
+def handle_zip2(attr, old, new):
+        ls = zip_list_from_df(df_zip, new)
+        new_data = {}
+        new_data['x'] = months
+        new_data['y'] = ls
+        ds.data = new_data
+        print(ls)
+
+
+
+menu1 = Select(options=list(df_zip['zipcode'].unique()),value='10000', title = 'Zipcode 1')
+menu1.on_change('value', handle_zip1)
+
+# Select for Zipcode 2
+menu2 = Select(options=list(df_zip['zipcode'].unique()),value='10000', title = 'Zipcode 2')
+menu2.on_change('value', handle_zip2)
+
+
+
 ####################################################
 # CREATES FIGURE AND THE CURVE FOR ALL 2020 DATA
 source_all = ColumnDataSource(df_all)
@@ -47,8 +65,8 @@ source_all = ColumnDataSource(df_all)
 
 #p = figure()
 
-r2 = p.line(x='month', y='avg_response_time', source=source_all)
+r1 = p.line(x='month', y='avg_response_time', source=source_all)
 
-curdoc().add_root(column(menu, p))
+curdoc().add_root(column(menu1, menu2, p))
 #curdoc().add_root(column(zipcode1, p))
 
